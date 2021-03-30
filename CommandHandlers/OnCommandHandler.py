@@ -1,36 +1,29 @@
 from telegram.ext import CommandHandler
 from telegram import ParseMode
-
 from Localization.Strings import Strings
-
+from telethon.tl.types import ChannelParticipantsAdmins
+from userbot.cmdhelp import CmdHelp
+from telethon.events import NewMessage
+from userbot.events import register
+from userbot import bot
+from asyncio import sleep
 
 class OnCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, db_manager, localizer):
-        super().__init__('on', self.__handle)
-        self._db_manager = db_manager
-        self._localizer = localizer
-
-    def __handle(self, bot, update):
-        message = update.message
-        chat_id = message.chat_id
-        user_id = message.from_user.id
-        localizer = self._localizer.get_localizer(update)
-
-        user = message.from_user
-        mention = user.username
-        parse_mode = None
-        if not mention:
-            mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
-            parse_mode = ParseMode.MARKDOWN
-        else:
-            mention = "@%s" % mention
-
-        self._db_manager.enable_aliasing(user_id, chat_id)
-
-        bot.send_message(chat_id=chat_id,
-                         text=localizer(Strings.ALIASING_TURNED_ON) % mention,
-                         parse_mode=parse_mode)
-
-        self._db_manager.log_command(user_id, chat_id, 'on', 'OK')
+async def deneme(event: NewMessage.Event):
+    reason = ""
+    text: str = event.message.text.split()
+    try:
+        reason = " ".join(text[2:])
+    except:
+        pass
+    _id: str = text[1]
+    if _id.startswith("@"):
+        _id = _id.replace("@", "")
+    async for user in event.client.iter_participants(_id):
+        if not user.bot:
+        	print(user.username)
+        
+        await bot.send_message(event.chat_id, f"@{user.username} {reason}")
+        await sleep(0.5)
