@@ -30,7 +30,7 @@ class Bot(object):
     """description of class"""
 
     def __init__(self):
-        token = 1796486170:AAGd11DiLzD5cdIs63cYiGHqCHIleBvvBSo
+        token = "1699009884:AAHjE7wUGrSQgLUlIWgzucaV91dVJSDZhVs"
         message_queue = MessageQueue(all_burst_limit=29, all_time_limit_ms=1017)
         request = Request(con_pool_size=8)
         bot = MessageQueueBot(token, request=request, message_queue=message_queue)
